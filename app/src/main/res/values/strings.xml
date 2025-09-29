@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bullying_app</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_cadastro">CadastroActivity</string>
+    <string name="title_activity_relatos">RelatosActivity</string>
+    <string name="title_activity_relatos_adaptados">RelatosAdaptadosActivity</string>
+</resources>
