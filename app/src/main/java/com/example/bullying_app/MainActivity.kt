@@ -1,19 +1,19 @@
-package com.example.bullyingapp
+package com.example.bullying_app
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.bullyingapp.data.model.LoginRequest
-import com.example.bullyingapp.data.repository.ApiRepository
-import com.example.bullyingapp.databinding.ActivityMainBinding
+import androidx.appcompat.app.AppCompatActivity
+import com.example.bullying_app.databinding.ActivityMainBinding
+import com.example.bullying_app.model.LoginRequest
+import com.example.bullying_app.model.LoginResponse
+import com.example.bullying_app.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val repository = ApiRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,48 +21,33 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLogin.setOnClickListener {
-            val email = binding.etEmail.text.toString().trim()
-            val senha = binding.etPassword.text.toString().trim()
+            val email = binding.etEmail.text.toString()
+            val senha = binding.etPassword.text.toString()
+
             if (email.isEmpty() || senha.isEmpty()) {
-                Toast.makeText(this, "Preencha email e senha", Toast.LENGTH_SHORT).show()
-            } else {
-                doLogin(email, senha)
+                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            RetrofitClient.api.login(LoginRequest(email, senha))
+                .enqueue(object : Callback<LoginResponse> {
+                    override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(this@MainActivity, "Login realizado!", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@MainActivity, ReportsActivity::class.java))
+                        } else {
+                            Toast.makeText(this@MainActivity, "Credenciais inválidas", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                        Toast.makeText(this@MainActivity, "Erro: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
         }
 
         binding.btnRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
-    }
-
-    private fun doLogin(email: String, senha: String) {
-        val req = LoginRequest(email, senha)
-        repository.login(req).enqueue(object : Callback<com.example.bullyingapp.data.model.LoginResponse> {
-            override fun onResponse(
-                call: Call<com.example.bullyingapp.data.model.LoginResponse>,
-                response: Response<com.example.bullyingapp.data.model.LoginResponse>
-            ) {
-                if (response.isSuccessful && response.body() != null) {
-                    val body = response.body()!!
-                    if (body.user != null) {
-                        Toast.makeText(this@MainActivity, "Login realizado", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@MainActivity, ReportsActivity::class.java)
-                        intent.putExtra("user_id", body.user.id)
-                        intent.putExtra("user_name", body.user.nome)
-                        intent.putExtra("user_type", body.user.tipo)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this@MainActivity, "Usuário não encontrado", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    // pode ser 401 ou outro erro
-                    Toast.makeText(this@MainActivity, "Credenciais inválidas", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<com.example.bullyingapp.data.model.LoginResponse>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Erro: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
     }
 }
