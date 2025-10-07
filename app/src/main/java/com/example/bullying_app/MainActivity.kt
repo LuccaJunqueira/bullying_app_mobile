@@ -2,9 +2,10 @@ package com.example.bullying_app
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.bullying_app.databinding.ActivityMainBinding
 import com.example.bullying_app.model.LoginRequest
 import com.example.bullying_app.model.LoginResponse
 import com.example.bullying_app.network.RetrofitClient
@@ -13,40 +14,49 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
-        binding.btnLogin.setOnClickListener {
-            val email = binding.etEmail.text.toString()
-            val senha = binding.etPassword.text.toString()
+        val etEmail = findViewById<EditText>(R.id.etEmail)
+        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnRegister = findViewById<Button>(R.id.btnRegister)
+
+        // Ação do botão de login
+        btnLogin.setOnClickListener {
+            val email = etEmail.text.toString().trim()
+            val senha = etPassword.text.toString().trim()
 
             if (email.isEmpty() || senha.isEmpty()) {
                 Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            RetrofitClient.api.login(LoginRequest(email, senha))
-                .enqueue(object : Callback<LoginResponse> {
-                    override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                        if (response.isSuccessful) {
-                            Toast.makeText(this@MainActivity, "Login realizado!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@MainActivity, ReportsActivity::class.java))
-                        } else {
-                            Toast.makeText(this@MainActivity, "Credenciais inválidas", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+            val request = LoginRequest(email, senha)
 
-                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        Toast.makeText(this@MainActivity, "Erro: ${t.message}", Toast.LENGTH_SHORT).show()
+            RetrofitClient.api.login(request).enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    if (response.isSuccessful && response.body() != null) {
+                        val user = response.body()!!.user
+                        Toast.makeText(this@MainActivity, "Bem-vindo, ${user.nome}!", Toast.LENGTH_SHORT).show()
+
+                        val intent = Intent(this@MainActivity, ReportsActivity::class.java)
+                        intent.putExtra("userId", user.id)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this@MainActivity, "Credenciais inválidas", Toast.LENGTH_SHORT).show()
                     }
-                })
+                }
+
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    Toast.makeText(this@MainActivity, "Erro de conexão: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
 
-        binding.btnRegister.setOnClickListener {
+        // Ação do botão de cadastro
+        btnRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }

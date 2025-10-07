@@ -1,47 +1,50 @@
 package com.example.bullying_app
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.bullying_app.ui.theme.Bullying_appTheme
+import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.bullying_app.model.RelatoResponse
+import com.example.bullying_app.network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class RelatosActivity : ComponentActivity() {
+class ReportsActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            Bullying_appTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting4(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+        setContentView(R.layout.activity_reports)
+
+        val recycler = findViewById<RecyclerView>(R.id.recyclerReports)
+        val btnSendReport = findViewById<Button>(R.id.btnSendReport)
+        recycler.layoutManager = LinearLayoutManager(this)
+
+        // Botão para nova denúncia
+        btnSendReport.setOnClickListener {
+            val userId = intent.getIntExtra("userId", -1)
+            val intent = Intent(this, SendReportActivity::class.java)
+            intent.putExtra("userId", userId)
+            startActivity(intent)
+        }
+
+        // Chamada Retrofit
+        RetrofitClient.api.listarRelatos().enqueue(object : Callback<List<RelatoResponse>> {
+            override fun onResponse(call: Call<List<RelatoResponse>>, response: Response<List<RelatoResponse>>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val adapter = ReportsAdapterActivity(response.body()!!)
+                    recycler.adapter = adapter
+                } else {
+                    Toast.makeText(this@ReportsActivity, "Erro ao carregar relatos", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-    }
-}
 
-@Composable
-fun Greeting4(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview4() {
-    Bullying_appTheme {
-        Greeting4("Android")
+            override fun onFailure(call: Call<List<RelatoResponse>>, t: Throwable) {
+                Toast.makeText(this@ReportsActivity, "Erro: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

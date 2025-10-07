@@ -1,37 +1,30 @@
 package com.example.bullying_app
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bullying_app.databinding.ItemReportBinding
 import com.example.bullying_app.model.RelatoResponse
 
-class ReportsAdapter : RecyclerView.Adapter<ReportsAdapter.ReportViewHolder>() {
+class ReportsAdapterActivity(private val lista: List<RelatoResponse>) :
+    RecyclerView.Adapter<ReportsAdapterActivity.ReportViewHolder>() {
 
-    private val items = mutableListOf<RelatoResponse>()
-
-    fun submitList(list: List<RelatoResponse>?) {
-        items.clear()
-        if (list != null) items.addAll(list)
-        notifyDataSetChanged()
-    }
-
-    inner class ReportViewHolder(private val binding: ItemReportBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: RelatoResponse) {
-            binding.tvAuthor.text = item.autor_nome
-            binding.tvText.text = item.texto
-        }
+    inner class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvAuthor: TextView = itemView.findViewById(R.id.tvAuthor)
+        val tvText: TextView = itemView.findViewById(R.id.tvText)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
-        val binding = ItemReportBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ReportViewHolder(binding)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_report, parent, false)
+        return ReportViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
-        holder.bind(items[position])
+        val relato = lista[position]
+        holder.tvAuthor.text = if (relato.anonimo) "Anônimo" else relato.autorNome
+        holder.tvText.text = relato.texto
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int = lista.size
 }
