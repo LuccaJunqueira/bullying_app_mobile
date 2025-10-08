@@ -1,50 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.bullying_app">
 
+    <!-- Permissão necessária para o Retrofit / acesso à rede -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bullying_app"
-        tools:targetApi="31">
+        android:usesCleartextTraffic="true">
+        <!-- permite cleartext (http) para desenvolvimento local -->
+
+        <!-- Activity de enviar relato -->
         <activity
-            android:name=".RelatosAdaptadosActivity"
+            android:name=".SendReportActivity"
             android:exported="false"
-            android:label="@string/title_activity_relatos_adaptados"
-            android:theme="@style/Theme.Bullying_app" />
+            android:label="Enviar Relato" />
+
+        <!-- Activity de listar relatos -->
         <activity
-            android:name=".RelatosActivity"
+            android:name=".ReportsActivity"
             android:exported="false"
-            android:label="@string/title_activity_relatos"
-            android:theme="@style/Theme.Bullying_app" />
+            android:label="Relatos" />
+
+        <!-- Activity de cadastro -->
         <activity
-            android:name=".CadastroActivity"
+            android:name=".RegisterActivity"
             android:exported="false"
-            android:label="@string/title_activity_cadastro"
-            android:theme="@style/Theme.Bullying_app" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.Bullying_app" />
+            android:label="Cadastro" />
+
+        <!-- Activity inicial (login/main) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Bullying_app">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+    </application>
 </manifest>

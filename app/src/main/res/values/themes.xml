@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.Bullying_app" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Tema baseado em AppCompat (compatível com AppCompatActivity) -->
+    <style name="Theme.Bullying_app" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- personalize cores se quiser -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
 </resources>

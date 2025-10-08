@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val btnRegister = findViewById<Button>(R.id.btnRegister)
 
-        // Ação do botão de login
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val senha = etPassword.text.toString().trim()
@@ -37,25 +36,33 @@ class MainActivity : AppCompatActivity() {
 
             RetrofitClient.api.login(request).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                    if (response.isSuccessful && response.body() != null) {
-                        val user = response.body()!!.user
-                        Toast.makeText(this@MainActivity, "Bem-vindo, ${user.nome}!", Toast.LENGTH_SHORT).show()
+                    if (!response.isSuccessful) {
+                        // resposta HTTP não 200 (ex: 401)
+                        val code = response.code()
+                        val err = response.errorBody()?.string()
+                        Toast.makeText(this@MainActivity, "Erro $code: ${err ?: "Credenciais inválidas"}", Toast.LENGTH_SHORT).show()
+                        return
+                    }
 
+                    val body = response.body()
+                    val user = body?.user
+                    if (user != null) {
+                        Toast.makeText(this@MainActivity, "Bem-vindo, ${user.nome}!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@MainActivity, ReportsActivity::class.java)
                         intent.putExtra("userId", user.id)
+                        intent.putExtra("userName", user.nome)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this@MainActivity, "Credenciais inválidas", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Resposta inválida do servidor (user faltando)", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Toast.makeText(this@MainActivity, "Erro de conexão: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Falha de rede: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
         }
 
-        // Ação do botão de cadastro
         btnRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }

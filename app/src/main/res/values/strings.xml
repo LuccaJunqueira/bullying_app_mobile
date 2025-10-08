@@ -4,4 +4,8 @@
     <string name="title_activity_cadastro">CadastroActivity</string>
     <string name="title_activity_relatos">RelatosActivity</string>
     <string name="title_activity_relatos_adaptados">RelatosAdaptadosActivity</string>
+    <string-array name="user_types">
+        <item>Aluno</item>
+        <item>Professor/Administração</item>
+    </string-array>
 </resources>
