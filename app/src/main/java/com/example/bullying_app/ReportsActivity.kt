@@ -12,6 +12,7 @@ import com.example.bullying_app.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.util.Log
 
 class ReportsActivity : AppCompatActivity() {
 
@@ -23,28 +24,55 @@ class ReportsActivity : AppCompatActivity() {
         val btnSendReport = findViewById<Button>(R.id.btnSendReport)
         recycler.layoutManager = LinearLayoutManager(this)
 
-        // Botão para nova denúncia
+        val userId = intent.getIntExtra("userId", -1)
+        val userType = intent.getStringExtra("userType")
+
+        // 🔒 Se for PROFESSOR, esconde o botão de criar relato
+        if (userType == "PROFESSOR") {
+            btnSendReport.visibility = Button.GONE
+        }
+
+        // 🔘 Botão "Novo Relato" — apenas alunos o verão
         btnSendReport.setOnClickListener {
-            val userId = intent.getIntExtra("userId", -1)
             val intent = Intent(this, SendReportActivity::class.java)
             intent.putExtra("userId", userId)
             startActivity(intent)
         }
 
-        // Chamada Retrofit
-        RetrofitClient.api.listarRelatos().enqueue(object : Callback<List<RelatoResponse>> {
+        // 🔁 Carrega relatos conforme o tipo de usuário
+        carregarRelatos(userType, userId, recycler)
+    }
+
+    private fun carregarRelatos(userType: String?, userId: Int, recycler: RecyclerView) {
+        Log.d("API_DEBUG", "Carregando relatos para $userType com ID $userId")
+
+        val call: Call<List<RelatoResponse>> = if (userType == "PROFESSOR") {
+            Log.d("API_DEBUG", "Chamando endpoint de professor /relatos")
+            RetrofitClient.api.listarTodosRelatos()
+        } else {
+            Log.d("API_DEBUG", "Chamando endpoint de aluno /relatos/aluno/$userId")
+            RetrofitClient.api.listarRelatosAluno(userId)
+        }
+
+        call.enqueue(object : Callback<List<RelatoResponse>> {
             override fun onResponse(call: Call<List<RelatoResponse>>, response: Response<List<RelatoResponse>>) {
+                Log.d("API_DEBUG", "Response code: ${response.code()}")
+                Log.d("API_DEBUG", "Response body: ${response.body()}")
+
                 if (response.isSuccessful && response.body() != null) {
                     val adapter = ReportsAdapterActivity(response.body()!!)
                     recycler.adapter = adapter
                 } else {
-                    Toast.makeText(this@ReportsActivity, "Erro ao carregar relatos", Toast.LENGTH_SHORT).show()
+                    Log.e("API_DEBUG", "Erro HTTP: ${response.code()} - ${response.errorBody()?.string()}")
+                    Toast.makeText(this@ReportsActivity, "Nenhum relato encontrado", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<RelatoResponse>>, t: Throwable) {
+                Log.e("API_DEBUG", "Falha Retrofit", t)
                 Toast.makeText(this@ReportsActivity, "Erro: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
+
 }

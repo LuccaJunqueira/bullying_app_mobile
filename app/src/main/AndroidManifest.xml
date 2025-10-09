@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bullying_app">
-
     <!-- Permissão necessária para o Retrofit / acesso à rede -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,36 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bullying_app"
         android:usesCleartextTraffic="true">
-        <!-- permite cleartext (http) para desenvolvimento local -->
-
-        <!-- Activity de enviar relato -->
+        <activity
+            android:name=".ReportDetailActivity"
+            android:exported="false"
+            android:label="Detalhes do Relato" />
         <activity
             android:name=".SendReportActivity"
             android:exported="false"
             android:label="Enviar Relato" />
-
-        <!-- Activity de listar relatos -->
         <activity
             android:name=".ReportsActivity"
             android:exported="false"
             android:label="Relatos" />
-
-        <!-- Activity de cadastro -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:label="Cadastro" />
-
-        <!-- Activity inicial (login/main) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
+
 </manifest>

@@ -5,22 +5,31 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiService {
 
-    // Login de usuário
+    // Login
     @POST("/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
-    // Cadastro de usuário
-    @POST("/cadastro")
-    fun register(@Body request: RegisterRequest): Call<GenericResponse>
+    // Cadastro de aluno
+    @POST("/cadastro/aluno")
+    fun registerAluno(@Body request: RegisterRequest): Call<GenericResponse>
 
-    // Enviar um novo relato
+    // Cadastro de professor
+    @POST("/cadastro/professor")
+    fun registerProfessor(@Body request: RegisterRequest): Call<GenericResponse>
+
+    // Enviar relato (somente aluno)
     @POST("/relato")
     fun criarRelato(@Body request: CreateRelatoRequest): Call<GenericResponse>
 
-    // Listar todos os relatos
+    // Relatos de um aluno específico
+    @GET("/relatos/aluno/{id}")
+    fun listarRelatosAluno(@Path("id") idAluno: Int): Call<List<RelatoResponse>>
+
+    // Todos os relatos (para professores)
     @GET("/relatos")
-    fun listarRelatos(): Call<List<RelatoResponse>>
+    fun listarTodosRelatos(): Call<List<RelatoResponse>>
 }

@@ -2,9 +2,7 @@ package com.example.bullying_app
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bullying_app.model.LoginRequest
 import com.example.bullying_app.model.LoginResponse
@@ -18,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val spinnerUserType = findViewById<Spinner>(R.id.spinnerUserType)
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
@@ -37,10 +36,7 @@ class MainActivity : AppCompatActivity() {
             RetrofitClient.api.login(request).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (!response.isSuccessful) {
-                        // resposta HTTP não 200 (ex: 401)
-                        val code = response.code()
-                        val err = response.errorBody()?.string()
-                        Toast.makeText(this@MainActivity, "Erro $code: ${err ?: "Credenciais inválidas"}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Erro: ${response.message()}", Toast.LENGTH_SHORT).show()
                         return
                     }
 
@@ -51,14 +47,15 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this@MainActivity, ReportsActivity::class.java)
                         intent.putExtra("userId", user.id)
                         intent.putExtra("userName", user.nome)
+                        intent.putExtra("userType", user.tipo)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this@MainActivity, "Resposta inválida do servidor (user faltando)", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Usuário não encontrado", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Toast.makeText(this@MainActivity, "Falha de rede: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Falha: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
         }

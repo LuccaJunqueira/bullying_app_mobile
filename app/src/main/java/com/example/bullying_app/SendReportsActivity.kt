@@ -25,15 +25,19 @@ class SendReportActivity : AppCompatActivity() {
         val userId = intent.getIntExtra("userId", -1)
 
         btnSend.setOnClickListener {
-            val texto = etReport.text.toString().trim()
+            val descricao = etReport.text.toString().trim()
             val anonimo = cbAnonymous.isChecked
 
-            if (texto.isEmpty()) {
+            if (descricao.isEmpty()) {
                 Toast.makeText(this, "Digite o relato", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val request = CreateRelatoRequest(usuario_id = userId, texto = texto, anonimo = anonimo)
+            val request = CreateRelatoRequest(
+                fk_aluno = userId,
+                descricao = descricao,
+                anonimo = anonimo
+            )
 
             RetrofitClient.api.criarRelato(request).enqueue(object : Callback<GenericResponse> {
                 override fun onResponse(call: Call<GenericResponse>, response: Response<GenericResponse>) {
