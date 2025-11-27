@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bullying_app.model.CreateRelatoRequest
@@ -20,7 +21,7 @@ class SendReportActivity : AppCompatActivity() {
 
         val etReport = findViewById<EditText>(R.id.etReport)
         val cbAnonymous = findViewById<CheckBox>(R.id.cbAnonymous)
-        val btnSend = findViewById<Button>(R.id.btnSend)
+        val btnSend = findViewById<ImageButton>(R.id.btnSend)
 
         val userId = intent.getIntExtra("userId", -1)
 

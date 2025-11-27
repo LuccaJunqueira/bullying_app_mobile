@@ -1,57 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:id="@+id/main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:padding="20dp"
+android:gravity="center_horizontal"
+android:background="@drawable/bg_gradiente_formularioaluno">
+
+<!-- Nome do usuário anônimo -->
+<TextView
+    android:id="@+id/tvAuthor"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Anônimo07"
+    android:textStyle="bold"
+    android:textSize="30sp"
+    android:textColor="#FFFFFF"
+    android:layout_marginTop="20dp" />
+
+<!-- Data e hora -->
+<TextView
+    android:id="@+id/tvDataHora"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Qui, 11 de Set, 08:17 (Agora)"
+    android:textSize="18sp"
+    android:textColor="#E0E0E0"
+    android:layout_marginBottom="20dp" />
+
+<!-- Título da descrição -->
+<TextView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SendReportActivity"
-    android:padding="24dp">
+    android:layout_height="wrap_content"
+    android:text="Descrição da Denúncia:"
+    android:textColor="#FFFFFF"
+    android:textStyle="bold"
+    android:textSize="20sp"
+    android:layout_marginBottom="6dp" />
 
-    <!-- Título -->
-    <TextView
-        android:id="@+id/tvSendTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enviar Relato"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp" />
+<!-- Caixa de texto -->
+<EditText
+    android:id="@+id/etReport"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:gravity="top|start"
+    android:hint="Descreva aqui o que aconteceu..."
+    android:background="@drawable/bg_caixatexto_formularioaluno"
+    android:padding="12dp"
+    android:textColor="#000000"
+    android:textColorHint="#888888"
+    android:textSize="18sp"
+    android:layout_marginBottom="25dp"
+    android:inputType="textMultiLine" />
 
-    <!-- Campo de texto -->
-    <EditText
-        android:id="@+id/etReport"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:hint="Descreva seu relato (ex: situação de bullying, ambiente, etc.)"
-        android:gravity="top|start"
-        android:backgroundTint="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/tvSendTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
+<!-- Pergunta -->
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Deseja deixar anonimamente ou seu nome de usuário?"
+    android:textColor="#FFFFFF"
+    android:textSize="20sp"
+    android:layout_marginBottom="10dp" />
 
-    <!-- CheckBox para envio anônimo -->
+<!-- Opções de anonimato -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginBottom="25dp">
+
     <CheckBox
         android:id="@+id/cbAnonymous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enviar anonimamente"
-        app:layout_constraintTop_toBottomOf="@id/etReport"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        android:text="Como Anônimo"
+        android:textColor="#FFFFFF"
+        android:checked="true"
+        android:textSize="20sp"
+        android:minHeight="48dp"
+        android:minWidth="48dp"
+        android:padding="8dp" />
 
-    <!-- Botão enviar -->
-    <Button
-        android:id="@+id/btnSend"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Enviar Relato"
-        app:layout_constraintTop_toBottomOf="@id/cbAnonymous"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
+</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<!-- Botão de enviar -->
+<ImageButton
+    android:id="@+id/btnSend"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:background="@drawable/btn_enviar_formularioaluno"
+    android:src="@drawable/icon_send"
+    app:tint="#FFFFFF"
+    android:contentDescription="Enviar"
+    android:scaleType="centerInside"
+    android:padding="10dp" />
+
+</LinearLayout>
