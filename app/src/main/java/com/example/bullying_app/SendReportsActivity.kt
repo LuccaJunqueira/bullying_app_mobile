@@ -24,6 +24,7 @@ class SendReportActivity : AppCompatActivity() {
         val btnSend = findViewById<ImageButton>(R.id.btnSend)
 
         val userId = intent.getIntExtra("userId", -1)
+        val userName = intent.getStringExtra("userName")
 
         btnSend.setOnClickListener {
             val descricao = etReport.text.toString().trim()

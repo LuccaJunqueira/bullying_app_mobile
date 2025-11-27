@@ -6,40 +6,64 @@
     android:padding="24dp"
     android:background="@drawable/bg_gradiente_formularioaluno">
 
+    <!-- AUTOR COM MAIS DESTAQUE -->
     <TextView
         android:id="@+id/tvDetailAuthor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Autor"
         android:textStyle="bold"
-        android:textSize="30sp"
+        android:textSize="32sp"
         android:textColor="#FFFFFF"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- DATA DESTACADA TAMBÉM -->
     <TextView
         android:id="@+id/tvDetailDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Data"
-        android:textSize="18sp"
-        android:textColor="#E0E0E0"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#F5F5F5"
         android:layout_marginTop="8dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="3"
         app:layout_constraintTop_toBottomOf="@id/tvDetailAuthor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/tvDetailDescription"
+    <!-- CARD ÚNICO, GRANDE, ESTILO CAIXA DE E-MAIL -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardDescricao1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Descrição completa do relato..."
-        android:layout_marginTop="16dp"
-        android:textColor="#333333"
-        android:textSize="15sp"
+        android:layout_height="260dp"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        android:foregroundGravity="top"
         app:layout_constraintTop_toBottomOf="@id/tvDetailDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvDetailDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Descrição completa do relato..."
+            android:textSize="20sp"
+            android:textColor="#333333"
+            android:gravity="top|start"
+            android:padding="22dp" />
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
